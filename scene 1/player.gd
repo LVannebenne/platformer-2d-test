@@ -1,13 +1,15 @@
 class_name Player
 extends CharacterBody2D
 
-@onready
-var animations = $AnimatedSprite2D
-@onready
-var state_machine = $state_machine
+signal has_fall
+
+@onready var animations = $AnimatedSprite2D
+@onready var state_machine = $state_machine
+@onready var move_component = $move_component
+@onready var data_store = $data_store
 
 func _ready() -> void:
-	state_machine.init(self, animations)
+	state_machine.init(self, animations, move_component, data_store)
 	
 func _unhandled_input(event: InputEvent) -> void:
 	state_machine.process_input(event)
@@ -131,3 +133,9 @@ func _process(delta: float) -> void:
 	#var screen_size = get_viewport_rect().size
 	
 	#global_position = global_position.clamp(Vector2(0,0), screen_size)
+
+
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	print("exited screen...")
+	data_store.is_dead = true
+	get_tree().change_scene_to_file("res://scene 1/game_over.tscn")

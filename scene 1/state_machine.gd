@@ -5,10 +5,12 @@ var starting_state: State
 
 var current_state: State
 
-func init(parent: Player, animations: AnimatedSprite2D) -> void:
+func init(parent: Player, animations: AnimatedSprite2D, move_component: MoveComponent, data_store: DataStore) -> void:
 	for child in get_children():
 		child.parent = parent
 		child.animations = animations
+		child.move_component = move_component
+		child.data_store = data_store
 		
 	change_state(starting_state)
 	

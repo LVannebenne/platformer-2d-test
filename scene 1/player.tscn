@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bndowx0balhu3"]
+[gd_scene load_steps=55 format=3 uid="uid://bndowx0balhu3"]
 
 [ext_resource type="Script" uid="uid://bi17lsncbty4v" path="res://scene 1/player.gd" id="1_li5uj"]
 [ext_resource type="Texture2D" uid="uid://642h7jf2etmr" path="res://Free-Base-4-Direction-Female-Character-Pixel-Art/PNG/Unarmed_Walk/Unarmed_Walk_full.png" id="1_psdlo"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" uid="uid://b3mwa714t3tmb" path="res://scene 1/jump.gd" id="8_22th3"]
 [ext_resource type="Script" uid="uid://dkagqwwbn0jpa" path="res://scene 1/fall.gd" id="9_ilfxe"]
 [ext_resource type="Script" uid="uid://hfnaqm4c7tp0" path="res://scene 1/run.gd" id="10_ya5q8"]
+[ext_resource type="Script" uid="uid://gujr1fnvxpao" path="res://scene 1/move_component.gd" id="11_5fvij"]
+[ext_resource type="Script" uid="uid://b5vjbvqnoknfw" path="res://scene 1/data_store.gd" id="12_5r7no"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q2fim"]
 atlas = ExtResource("2_6spxa")
@@ -346,31 +348,34 @@ rotation_smoothing_enabled = true
 script = ExtResource("5_6o00x")
 starting_state = NodePath("idle")
 
-[node name="move" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "fall_state")]
+[node name="move" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "fall_state", "run_state")]
 script = ExtResource("6_mkk4t")
 idle_state = NodePath("../idle")
 jump_state = NodePath("../jump")
 fall_state = NodePath("../fall")
+run_state = NodePath("../run")
 
-[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("move_state", "jump_state", "fall_state")]
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("move_state", "jump_state", "fall_state", "run_state")]
 script = ExtResource("7_22th3")
 move_state = NodePath("../move")
 jump_state = NodePath("../jump")
 fall_state = NodePath("../fall")
+run_state = NodePath("../run")
 animation_name = "default_idle"
 
-[node name="jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state")]
+[node name="jump" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "move_state", "run_state")]
 script = ExtResource("8_22th3")
 fall_state = NodePath("../fall")
 idle_state = NodePath("../idle")
 move_state = NodePath("../move")
+run_state = NodePath("../run")
 
-[node name="fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state")]
+[node name="fall" type="Node" parent="state_machine" node_paths=PackedStringArray("jump_state", "idle_state", "move_state", "run_state")]
 script = ExtResource("9_ilfxe")
 jump_state = NodePath("../jump")
 idle_state = NodePath("../idle")
 move_state = NodePath("../move")
-animation_name = "default_idle"
+run_state = NodePath("../run")
 
 [node name="run" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "jump_state", "fall_state", "move_state")]
 script = ExtResource("10_ya5q8")
@@ -378,3 +383,13 @@ idle_state = NodePath("../idle")
 jump_state = NodePath("../jump")
 fall_state = NodePath("../fall")
 move_state = NodePath("../move")
+
+[node name="move_component" type="Node" parent="."]
+script = ExtResource("11_5fvij")
+
+[node name="data_store" type="Node" parent="."]
+script = ExtResource("12_5r7no")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
